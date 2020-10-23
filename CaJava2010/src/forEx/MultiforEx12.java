@@ -15,24 +15,25 @@ public class MultiforEx12 {
 			}else {
 				break;
 			}
+			
 		}
 		int i, j= 0;
 		int star = 0;
 		for(i=0; i<n;i++) {
 			if(i<=n/2) {
-				for(j=0; j< n/2-i; j++) {
+				for(j=0; j<n/2-i; j++) {
 					System.out.print("  ");
 				}
-				for(j=0; j<2*i+1; j++) {
+				for(j=0; j<=2*i; j++) {
 					System.out.print(" *");
 					star++;
 				}
 			}
 			else {
-				for(j=0; j< i- n/2; j++) {
+				for(j=0; j<i-n/2; j++) {
 					System.out.print("  ");
 				}
-				for(j=0; j<2*n-2*i-1; j++) {
+				for(j=0; j<2*n - 2*i - 1;j++) {
 					System.out.print(" *");
 					star++;
 				}
