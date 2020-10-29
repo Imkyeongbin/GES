@@ -4,8 +4,11 @@ public class BMW_X3 extends Car001{
 	
 	BMW_X3(String name) {
 		super(name);
+		this.name = "BMW X3";
 	}
-
+	
+	
+	
 	@Override
 	public void run(int speed) {
 		System.out.println(speed+"의 속도로 달린다.");

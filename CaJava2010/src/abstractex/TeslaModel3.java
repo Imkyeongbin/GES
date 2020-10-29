@@ -3,7 +3,6 @@ package abstractex;
 public class TeslaModel3 extends Car001{
 	TeslaModel3(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
