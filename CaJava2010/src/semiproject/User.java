@@ -1,4 +1,4 @@
-package selfproject;
+package semiproject;
 
 public class User {
 	Account[] acc;

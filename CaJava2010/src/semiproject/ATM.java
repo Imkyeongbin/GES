@@ -1,4 +1,4 @@
-package selfproject;
+package semiproject;
 
 public class ATM {
 
@@ -19,7 +19,8 @@ public class ATM {
 			case 6: atmM.transferMenu(); break;
 			case 7: atmM.join(); break;
 			case 8: atmM.unsubscribe(); break;
-			case 9: System.out.println("이용해 주셔서 감사합니다."); break ATM; 
+			case 9: System.out.println("이용해 주셔서 감사합니다."); break ATM;
+			case 0: atmM.directLogOn();break;
 			default : System.out.println("잘못된 메뉴입니다. 다시 선택해주세요.");
 			}
 			

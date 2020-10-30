@@ -1,4 +1,4 @@
-package selfproject;
+package semiproject;
 
 public abstract class Manager {
 	abstract public void logIn();

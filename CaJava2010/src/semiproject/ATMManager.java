@@ -1,4 +1,4 @@
-package selfproject;
+package semiproject;
 
 import java.util.Scanner;
 
@@ -6,13 +6,21 @@ public class ATMManager extends Manager{
 	static Scanner sc = new Scanner(System.in);
 	User[] users;
 	int log = -1;
+	Bank[] banks;
 	ATMManager(){
 		users = new User[5];
 		long accs[][] = {{12345}, {23456,24680}, {34567}, {45678},{1002331626707L}};
 		int moneys[][] = {{10000}, {20000, 25000}, {30000}, {40000}, {50000}};
+		String codes[][] = {{"03"},{"11","20"},{"03"},{"11"},{"20"}};
 		String ids[] = {"abab", "bcbc", "cdcd", "dede", "fdt15ss"};
 		String pws[] = {"1234", "2345", "3456", "4567", "5678"};
 		String names[] = {"박지성", "김연아", "손흥민", "황희찬", "임경빈"};
+		int bankSize = 3;
+		banks = new Bank[bankSize];
+		banks[0] = new IBK();
+		banks[1] = new Nonghyup();
+		banks[2] = new WooriBank();
+		
 		for(int i=0; i<users.length; i++) {
 			users[i] = new User();
 			users[i].id = ids[i];
@@ -22,10 +30,20 @@ public class ATMManager extends Manager{
 			for(int j=0; j<accs[i].length;j++) {
 				users[i].acc[j] = new Account();
 				users[i].acc[j].account = accs[i][j];
-				users[i].acc[j].money = moneys[i][j];
+				users[i].acc[j].setMoney(moneys[i][j]);
+				
+				users[i].acc[j].bank = banks[accBankCheck(codes[i][j])];
 				users[i].accCount++;
 			}
 		}
+	}
+	public int accBankCheck(String code) {
+		for(int i=0; i<banks.length; i++) {
+			if(banks[i].code.equals(code)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 	@Override
 	public void logIn() {
@@ -72,6 +90,8 @@ public class ATMManager extends Manager{
 		int accSel = sc.nextInt() -1;
 		return accSel;
 	}
+	
+	
 	@Override
 	public void checkMenu() {
 		if(log != -1) {
@@ -79,6 +99,7 @@ public class ATMManager extends Manager{
 				System.out.println("[조회]");
 				int accSel =selectAcc();
 				if(accSel<users[log].accCount&& accSel>=0) {
+					users[log].acc[accSel].bank.introductionBank();
 					users[log].acc[accSel].printAccount();
 					System.out.println();
 				}else if(accSel == -1){
@@ -100,6 +121,7 @@ public class ATMManager extends Manager{
 				System.out.println("[입금]");
 				int accSel =selectAcc();
 				if(accSel<users[log].accCount&& accSel>=0) {
+					users[log].acc[accSel].bank.introductionBank();
 					deposit(accSel);
 				}else if(accSel == -1){
 					System.out.println("종료합니다.");
@@ -122,8 +144,8 @@ public class ATMManager extends Manager{
 			}else if(addMoney<0) {
 				System.out.println("잘못된 금액입니다.");
 			}else {
-				users[log].acc[accSel].money += addMoney;
-				System.out.println("입금되었습니다.");
+				users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() + addMoney);
+				System.out.println(addMoney+"원 입금되었습니다.");
 				break;
 			}
 		}
@@ -136,6 +158,7 @@ public class ATMManager extends Manager{
 				System.out.println("[인출]");
 				int accSel =selectAcc();
 				if(accSel<users[log].accCount&& accSel>=0) {
+					users[log].acc[accSel].bank.introductionBank();
 					withdraw(accSel);
 				}else if(accSel == -1){
 					System.out.println("종료합니다.");
@@ -158,11 +181,11 @@ public class ATMManager extends Manager{
 				return;
 			}else if(minusMoney<0) {
 				System.out.println("잘못된 금액입니다.");
-			}else if(minusMoney>users[log].acc[accSel].money){
+			}else if(minusMoney>users[log].acc[accSel].getMoney()){
 				System.out.println("잔액 초과입니다.");
 			}else {
-				users[log].acc[accSel].money -= minusMoney;
-				System.out.println("출금되었습니다.");
+				users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() - minusMoney);
+				System.out.println(minusMoney+"원 출금되었습니다.");
 				break;
 			}
 		}
@@ -175,6 +198,7 @@ public class ATMManager extends Manager{
 				System.out.println("[이체]");
 				int accSel =selectAcc();
 				if(accSel<users[log].accCount&& accSel>=0) {
+					users[log].acc[accSel].bank.introductionBank();
 					transfer(accSel);
 				}else if(accSel == -1){
 					System.out.println("종료합니다.");
@@ -189,14 +213,18 @@ public class ATMManager extends Manager{
 	}
 	public void transfer(int accSel) {
 		while(true) {
-			System.out.println("이체할 계좌를 적으세요");
+			String code = bankCode(); 
+			if(code.equals("0")) {
+				break;
+			}
+			System.out.println("이체할 번호를 적으세요");
 			System.out.print("(종료 0)>");
 			long transferAcc = sc.nextLong();
 			int checkI =-1;
 			int checkJ =-1;
 			for(int i=0; i<users.length;i++) {
 				for(int j=0; j<users[log].accCount;j++) {
-					if(users[i].acc[j].account == transferAcc) {
+					if(users[i].acc[j].bank.code.equals(code)&&users[i].acc[j].account == transferAcc) {
 						checkI = i;
 						checkJ = j;
 					}
@@ -204,20 +232,36 @@ public class ATMManager extends Manager{
 			}
 			if(checkI != -1) {
 				while(true) {
+					int fee =0;
+					if(users[checkI].acc[checkJ].bank.code.equals(users[log].acc[accSel].bank.code)) {
+						System.out.println("당행이체시 십만원 이하에는 수수료가 없고,");
+						System.out.println("십만원 이상에는 수수료가 1000원 발생합니다.");
+					}else {
+						System.out.println("타행이체시 십만원 이하에는 수수료 500원,");
+						System.out.println("십만원 이상에는 수수료가 1500원 발생합니다.");
+						fee = 500;
+					}
 					System.out.println("이체할 금액을 적으세요");
 					System.out.print("(종료 0)>");
 					int transferMoney = sc.nextInt();
-					
+					if(transferMoney >=100000) {
+						fee += 1000;
+					}
 					if(transferMoney == 0) {
 						return;
 					}else if(transferMoney<0) {
 						System.out.println("잘못된 금액입니다.");
-					}else if(transferMoney>users[log].acc[accSel].money){
+					}else if(transferMoney+fee>users[log].acc[accSel].getMoney()){
 						System.out.println("잔액 초과입니다.");
 					}else {
-						users[log].acc[accSel].money -= transferMoney;
-						users[checkI].acc[checkJ].money += transferMoney;
-						System.out.println("이체되었습니다.");
+						users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() - transferMoney+fee);
+						users[checkI].acc[checkJ].setMoney(users[checkI].acc[checkJ].getMoney() + transferMoney);
+						
+						System.out.println(users[checkI].name+"님\n["+users[checkI].acc[checkJ].bank.name+":"+
+								users[checkI].acc[checkJ].account
+								+"] 계좌에,\n"+transferMoney+"원 이체되었습니다.");
+						System.out.println("수수료는 "+fee+"원 입니다.");
+						System.out.println("잔액은 "+users[log].acc[accSel].getMoney()+"원 입니다.");
 						break;
 					}
 				}
@@ -230,6 +274,21 @@ public class ATMManager extends Manager{
 		}
 	}
 	
+	public String bankCode() {
+		while(true) {
+			System.out.println("은행 코드를 입력해주세요");
+			System.out.print("(뒤로 가기 0)>");
+			String code = sc.next();
+			for(int i=0; i<banks.length; i++) {
+				if(code.equals(banks[i].code)) {
+					return code;
+				}
+			}
+			if(code.equals("0")) return code;
+			System.out.println("잘못된 코드입니다.");
+		}
+	}
+	
 	@Override // 아직 작성안됨
 	public void join() {
 		if(log == -1) {
@@ -238,9 +297,35 @@ public class ATMManager extends Manager{
 				System.out.println("사용하실 ID를 적어주세요.");
 				System.out.print(">");
 				String id = sc.next();
-				
+				String pw;
 				if(checkId(id)==-1) {
-					
+					while(true) {
+						System.out.println("사용할 pw를 적어주세요.");
+						System.out.print(">");
+						pw = sc.next();
+						if(pw.contains(id)) {
+							System.out.println("id를 포함하여 쓸 수 없습니다.");
+						}else if(pw.length()<4) {
+							System.out.println("패스워드는 4자 이상으로 적어주세요");
+						}
+						else {
+							break;
+						}
+					}
+					System.out.println("다시한번 pw를 적어주세요.");
+					System.out.print(">");
+					String pw2 = sc.next();
+					if(pw.equals(pw2)) {
+						System.out.println("비밀 번호가 확인되었습니다.");
+						if(users.length==0) {//아직 작성중.
+							users = new User[users.length+1];
+						}else {
+							User[] temp = users;
+						}
+						break;
+					}else {
+						System.out.println("비밀 번호가 서로 다릅니다.");
+					}
 				}
 			}
 			
@@ -249,13 +334,16 @@ public class ATMManager extends Manager{
 			System.out.println("로그아웃 상태에서 사용 가능한 메뉴입니다.");
 		}
 	}	
-	public int checkId(String id) {// 아직 작성안됨
+	public int checkId(String id) {
 		int check = -1;
 		for(int i=0; i<users.length;i++) {
-			
+			if(users[i].id.equals(id)) {
+				check = i;
+			}
 		}
 		return check;
 	}
+	
 
 	@Override
 	public void unsubscribe() {
@@ -318,6 +406,21 @@ public class ATMManager extends Manager{
 	public void printAll() {
 		for(int i=0; i<users.length; i++) {
 			users[i].printUser();
+		}
+	}
+	
+	public void directLogOn() {
+		while(true) {
+			System.out.println("다이렉트 로그인할 인덱스를 선택하세요");
+			System.out.print("(취소 : -1)>");
+			int selId = sc.nextInt();
+			if(selId>=0 && selId<users.length) {
+				log = selId;break;
+			}else if(selId == -1) {
+				break;
+			}else{
+				System.out.println("잘못 입력됨.");
+			}
 		}
 	}
 }
