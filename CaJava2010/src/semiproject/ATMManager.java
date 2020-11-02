@@ -4,6 +4,8 @@ import java.util.Scanner;
 
 public class ATMManager extends Manager{
 	static Scanner sc = new Scanner(System.in);
+	static ATMManager atmM = new ATMManager();
+	AccountManager accM = new AccountManager();
 	User[] users;
 	int log = -1;
 	Bank[] banks;
@@ -93,25 +95,34 @@ public class ATMManager extends Manager{
 	
 	
 	@Override
-	public void checkMenu() {
+	public void accountManagementMenu() {
 		if(log != -1) {
 			while(true) {
-				System.out.println("[조회]");
-				int accSel =selectAcc();
-				if(accSel<users[log].accCount&& accSel>=0) {
-					users[log].acc[accSel].bank.introductionBank();
-					users[log].acc[accSel].printAccount();
-					System.out.println();
-				}else if(accSel == -1){
-					System.out.println("종료합니다.");
-					break;
+				System.out.println("[계좌 관리]");
+				printAccountManagementMenu();
+				int accountManagementSel = sc.nextInt();
+				if(accountManagementSel == 0) break;
+				if(accountManagementSel == 1) {
+					accM.createAcc();
+				}else if(accountManagementSel == 2){
+					accM.deleteAcc();
+				}else if(accountManagementSel == 3) {
+					accM.checkAcc();
 				}else {
-					System.out.println("잘못된 선택입니다.");
+					System.out.println("잘못 입력하셨습니다.");
 				}
 			}
 		}else {
 			System.out.println("로그인 후 이용 가능합니다.");
 		}
+	}
+	
+	public void printAccountManagementMenu() {
+		System.out.println("1.계좌 생성");
+		System.out.println("2.계좌 삭제");
+		System.out.println("3.계좌 조회");
+		System.out.println("0.뒤로 가기");
+		System.out.print(">");
 	}
 	
 	@Override
@@ -277,7 +288,7 @@ public class ATMManager extends Manager{
 	public String bankCode() {
 		while(true) {
 			System.out.println("은행 코드를 입력해주세요");
-			System.out.print("(뒤로 가기 0)>");
+			System.out.print("[기업:03, 농협:11, 우리:20](0.취소)>");
 			String code = sc.next();
 			for(int i=0; i<banks.length; i++) {
 				if(code.equals(banks[i].code)) {
@@ -294,9 +305,14 @@ public class ATMManager extends Manager{
 		if(log == -1) {
 			System.out.println("환영합니다.");
 			while(true) {
+				System.out.println("사용하실 이름을 적어주세요.");
+				System.out.print("(0.취소)>");
+				String name = sc.next();
+				if(name.equals("0")) break;
 				System.out.println("사용하실 ID를 적어주세요.");
-				System.out.print(">");
+				System.out.print("(0.취소)>");
 				String id = sc.next();
+				if(id.equals("0")) break;
 				String pw;
 				if(checkId(id)==-1) {
 					while(true) {
@@ -321,11 +337,22 @@ public class ATMManager extends Manager{
 							users = new User[users.length+1];
 						}else {
 							User[] temp = users;
+							users = new User[users.length+1];
+							for(int i=0; i<users.length-1; i++) {
+								users[i] = temp[i];
+							}
 						}
+						users[users.length-1] = new User();
+						users[users.length-1].accCount = 0;
+						users[users.length-1].id = id;
+						users[users.length-1].name = name;
+						users[users.length-1].pw = pw;
 						break;
 					}else {
 						System.out.println("비밀 번호가 서로 다릅니다.");
 					}
+				}else {
+					System.out.println("이미 존재하는 아이디입니다.");
 				}
 			}
 			
@@ -387,7 +414,7 @@ public class ATMManager extends Manager{
 	public void printMenu() {
 		System.out.println("1.로그인");
 		System.out.println("2.로그아웃");
-		System.out.println("3.조회");
+		System.out.println("3.계좌 관리");
 		System.out.println("4.입금");
 		System.out.println("5.출금");
 		System.out.println("6.이체");

@@ -1,7 +1,7 @@
 package semiproject;
 
 public class User {
-	Account[] acc;
+	Account[] acc = new Account[3];
 	String id;
 	String pw;
 	String name;
