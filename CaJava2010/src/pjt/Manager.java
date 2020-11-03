@@ -1,4 +1,4 @@
-package semiproject;
+package pjt;
 
 public abstract class Manager {
 	abstract public void logIn();

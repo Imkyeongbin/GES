@@ -1,4 +1,4 @@
-package semiproject;
+package pjt;
 
 import java.util.Scanner;
 
@@ -157,6 +157,7 @@ public class ATMManager extends Manager{
 			}else {
 				users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() + addMoney);
 				System.out.println(addMoney+"원 입금되었습니다.");
+				System.out.println("잔액은 "+users[log].acc[accSel].getMoney()+"원 입니다.");
 				break;
 			}
 		}
@@ -197,6 +198,7 @@ public class ATMManager extends Manager{
 			}else {
 				users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() - minusMoney);
 				System.out.println(minusMoney+"원 출금되었습니다.");
+				System.out.println("잔액은 "+users[log].acc[accSel].getMoney()+"원 입니다.");
 				break;
 			}
 		}
@@ -234,7 +236,7 @@ public class ATMManager extends Manager{
 			int checkI =-1;
 			int checkJ =-1;
 			for(int i=0; i<users.length;i++) {
-				for(int j=0; j<users[log].accCount;j++) {
+				for(int j=0; j<users[i].accCount;j++) {
 					if(users[i].acc[j].bank.code.equals(code)&&users[i].acc[j].account == transferAcc) {
 						checkI = i;
 						checkJ = j;
@@ -265,7 +267,7 @@ public class ATMManager extends Manager{
 					}else if(transferMoney+fee>users[log].acc[accSel].getMoney()){
 						System.out.println("잔액 초과입니다.");
 					}else {
-						users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() - transferMoney+fee);
+						users[log].acc[accSel].setMoney(users[log].acc[accSel].getMoney() - transferMoney-fee);
 						users[checkI].acc[checkJ].setMoney(users[checkI].acc[checkJ].getMoney() + transferMoney);
 						
 						System.out.println(users[checkI].name+"님\n["+users[checkI].acc[checkJ].bank.name+":"+
@@ -299,8 +301,16 @@ public class ATMManager extends Manager{
 			System.out.println("잘못된 코드입니다.");
 		}
 	}
+	public Bank bankSearchByCode(String code) {
+		for(int i=0; i<banks.length; i++) {
+			if(code.equals(banks[i].code)) {
+				return banks[i];
+			}
+		}
+		return null;
+	}
 	
-	@Override // 아직 작성안됨
+	@Override 
 	public void join() {
 		if(log == -1) {
 			System.out.println("환영합니다.");
@@ -333,7 +343,7 @@ public class ATMManager extends Manager{
 					String pw2 = sc.next();
 					if(pw.equals(pw2)) {
 						System.out.println("비밀 번호가 확인되었습니다.");
-						if(users.length==0) {//아직 작성중.
+						if(users.length==0) {
 							users = new User[users.length+1];
 						}else {
 							User[] temp = users;

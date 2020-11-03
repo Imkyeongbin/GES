@@ -1,4 +1,4 @@
-package semiproject;
+package pjt;
 
 public class ATM {
 
