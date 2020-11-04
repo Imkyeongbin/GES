@@ -23,12 +23,14 @@ public class ATMManager extends Manager{
 		banks[1] = new Nonghyup();
 		banks[2] = new WooriBank();
 		
+		int accountSize = 3;
+		
 		for(int i=0; i<users.length; i++) {
 			users[i] = new User();
 			users[i].id = ids[i];
 			users[i].pw = pws[i];
 			users[i].name = names[i];
-			users[i].acc = new Account[3];
+			users[i].acc = new Account[accountSize];
 			for(int j=0; j<accs[i].length;j++) {
 				users[i].acc[j] = new Account();
 				users[i].acc[j].account = accs[i][j];

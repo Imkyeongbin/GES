@@ -30,7 +30,7 @@ public class AccountManager {
 						String recommendId = ATMManager.sc.next();
 						if (recommendId.equals("0")) break;
 						int bonusIdx = ATMManager.atmM.checkId(recommendId);
-						if(bonusIdx!= -1) {
+						if(bonusIdx!= -1&&bonusIdx!=log) {
 							int bonusMoney = ran.nextInt(1000)+1;
 							while(true) {
 								newAcc = ran.nextInt(999999999)+10000;
@@ -51,6 +51,8 @@ public class AccountManager {
 									+ATMManager.atmM.users[log].acc[accCount].account+"입니다.");
 							accCount++;
 							break;
+						}else if(bonusIdx == log) {
+							System.out.println("본인의 계좌를 추천할 수 없습니다.");
 						}else {
 							System.out.println("없는 아이디입니다.");
 						}
