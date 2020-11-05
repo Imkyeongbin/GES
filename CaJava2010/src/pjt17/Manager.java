@@ -1,4 +1,4 @@
-package pjt;
+package pjt17;
 
 public abstract class Manager {
 	abstract public void logIn();

@@ -1,4 +1,4 @@
-package pjt;
+package pjt17;
 
 public class Bank {
 	String name;

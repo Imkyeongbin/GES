@@ -1,4 +1,4 @@
-package pjt;
+package pjt17;
 
 import java.util.Scanner;
 
