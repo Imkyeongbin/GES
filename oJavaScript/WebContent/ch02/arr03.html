@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var arr = []; // 비어있는 배열을 생성함.
+	arr["하나"] = 1;// 숫자 인덱스 대신에 문자열을 인덱스로 배열 요소를 추가함.
+	arr["참"] = true;
+	arr["자바스크립트"] = "JavaScript";
+	document.write(arr["참"]+"<p>"); // 문자열을 인덱스로 배열 요소에 접근할 수 있음.
+	document.write(arr.length+"<p>"); // 연관 배열은 Array 객체가 아니므로 length 프로퍼티의 값이 0임.
+	document.write(arr[0] + "<p>"); // undefined
+</script>
+</head>
+<body>
+	<h1> arr03 </h1>
+	연관 배열(associative array) 예제
+</body>
+</html>

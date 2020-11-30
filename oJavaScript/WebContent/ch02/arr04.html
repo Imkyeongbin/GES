@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	var str = "안녕하세요!"; // 문자열 생성
+	document.write(str.charAt(2)+"<p>"); // 하
+	document.write(str[2]+"<p>"); // 하
+	str[0] = "1";	// 자바스크립트의 문자열은 읽기 전용
+	document.write(str[0]+"<p>"); // 안
+	document.write(str instanceof Array); // false
+
+</script>
+</head>
+<body>
+	<h1> arr04 </h1>
+	문자열을 배열처럼 접근<p>
+</body>
+</html>
