@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+var vMin = Math.min(1, 10, -100, -10, 1000, 0);
+var vMax = Math.max(1, 10, -100, -10, 1000, 0);
+var vRound = Math.round(10.5);
+var vFloor = Math.floor(11.01); // 11
+var vCeil = Math.ceil(11.01);	// 12
+document.write("Math.min(1, 10, -100, -10, 1000, 0)->" + vMin + "<br>"); // -100
+document.write("Math.max(1, 10, -100, -10, 1000, 0)->" + vMax + "<br>"); // 1000
+document.write("Math.round(10.5)->" + vRound + "<br>") // 11
+document.write("Math.round(10.5)->" + vFloor + "<br>") // 11
+document.write("Math.ceil(11.01)->" + vCeil + "<br>")	// 12
+</script>
+</head>
+<body>
+	<h1> obj07 </h1>
+	Math 메소드 예제<p>
+</body>
+</html>
