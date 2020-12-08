@@ -25,8 +25,7 @@
 	FileWriter fw = new FileWriter(real);
 	fw.write(msg);
 	fw.close();
-	
-	
+	// Browser Display
 	out.println("제목 : "+ title+"<br>");
 	out.println("작성자 : "+ writer +"<br>");
 	out.println("내용 : "+ content+"<br>");
