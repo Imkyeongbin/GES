@@ -9,7 +9,7 @@
 </head>
 <body>
 <fmt:formatNumber value="10000" groupingUsed="true"/><br>
-<fmt:formatNumber value="3.1415923" pattern = "#.###"/><br>
+<fmt:formatNumber value="3.1415923" pattern = "#.###"/><br><!--반올림-->
 <fmt:formatNumber value="3.1" pattern="#.##"/><br>
 <fmt:formatNumber value="3.1" pattern="#.00"/><br>
 <fmt:formatNumber value="121434323453." pattern="##,###.00"/><br>
