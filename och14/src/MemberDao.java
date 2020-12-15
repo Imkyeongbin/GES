@@ -1,4 +1,4 @@
-package util;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +23,7 @@ public class MemberDao {
 		Connection conn = null;
 		int result = 0;
 		PreparedStatement pstmt = null;
-		String sql = "insert into member1 values(?,?,?,sysdate)";
+		String sql = "insert into member1 values(?,?,?,sysdate,?)";
 		try {
 			conn = getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -31,6 +31,7 @@ public class MemberDao {
 			pstmt.setString(1, member.getId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getName());
+			pstmt.setString(4, member.getImage());
 			result = pstmt.executeUpdate();
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
