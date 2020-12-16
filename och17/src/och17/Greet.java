@@ -9,7 +9,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 
-@WebFilter("/sub/*")
+@WebFilter("/sub1/*")
 public class Greet implements Filter {
 
 	@Override
