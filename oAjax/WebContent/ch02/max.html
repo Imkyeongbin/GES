@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src= "../js/httpRequest.js"></script>
+<script type="text/javascript">
+	function chk(){
+	//	sendRequest(   url,			params, callback, method)
+		sendRequest("temperate.jsp", null, 		kk, 	"GET");
+	}
+	function kk(){
+		var temp = document.getElementById("temp");
+		var max = document.getElementById("max");
+		if(httpRequest.readyState==4)
+			if(httpRequest.status == 200){
+				var value = httpRequest.responseText;
+				// 9.8, 12.2, 24.7, 23.7, 23.1
+				temp.innerHTML = value;
+				// 문자형 tp[] = {9.8, 12.2, 24.7, 23.7, 23.1}
+				var tp = value.split(",");
+				// 숫자형 arrTemp[]
+				var arrTemp = new Array(tp.length);
+				// 숫자형 arrTemp[] = parseFloat{ 문자형 tp[]}
+				for(var i=0; i<tp.length; i++){
+					arrTemp[i] = parseFloat(tp[i]);
+				}
+				var mx = 0;
+				// 숫자형 arrTemp[] --> Max 온도
+				for(var i=0; i< arrTemp.length;i++){
+					if(mx<arrTemp[i]) mx = arrTemp[i];
+				}
+				max.innerHTML = mx;
+			}
+	}
+
+</script>
+</head>
+<body>
+<input type = "button" value="온도보기" onclick="chk()"><p>
+온도 <div id = "temp"></div><p>
+최고온도 <div id = "max"></div>
+</body>
+</html>
