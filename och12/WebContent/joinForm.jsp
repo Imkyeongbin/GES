@@ -42,12 +42,15 @@
 			<tr>
 				<td>전화번호</td>
 				<td><input type="text" name="tel" required="required"
-					pattern="\d{2,3}-\d{3,4}-d{4}"
+					pattern="\d{2,3}-\d{3,4}-\d{4}"
 					placeholder="xxx-xxxx-xxxx"
 					title="2,3자리-3,4자리-4자리"
 					>
 				</td>
 			</tr>
+			<tr>
+				<td><input type="submit" value="확인"></td>
+				<td><input type="reset" value="취소"></td>
 		</table>
 	</form>
 </body>

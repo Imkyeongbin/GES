@@ -98,4 +98,102 @@ public class MemberDao {
 		}
 		return list;
 	}
+	
+	public int insert(Member member) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "INSERT INTO member2 VALUES (?, ?, ?, ?, ?, sysdate)";
+		int result = 0 ;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getId());
+			pstmt.setString(2, member.getPasswd());
+			pstmt.setString(3, member.getName());
+			pstmt.setString(4, member.getAddress());
+			pstmt.setString(5, member.getTel());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		return result;
+	}
+	
+	public Member select(String id) throws SQLException {
+		Member member = new Member();
+		Connection conn = null;
+		String sql = "SELECT * FROM member2 where id = ?";
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				member.setId(rs.getString(1));
+				member.setPasswd(rs.getString(2));
+				member.setName(rs.getString(3));
+				member.setAddress(rs.getString(4));
+				member.setTel(rs.getString(5));
+				member.setReg_date(rs.getDate(6));
+			}
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
+			if(rs!=null) pstmt.close();
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		return member;
+	}
+	
+	public int update(Member member) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE member2 SET passwd =?,name =?,address=?,tel=?  WHERE id = ?";
+		int result = 0 ;
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getPasswd());
+			pstmt.setString(2, member.getName());
+			pstmt.setString(3, member.getAddress());
+			pstmt.setString(4, member.getTel());
+			pstmt.setString(5, member.getId());
+			
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		return result;
+	}
+	public int delete(String id, String passwd) throws SQLException {
+		
+		Connection conn = null;
+		int result = 0;
+		PreparedStatement pstmt = null;
+		result = check(id,passwd);
+		if(result != 1) return result;
+		String sql = "DELETE FROM member2 WHERE id = ?";
+		try {
+			conn= getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			result = pstmt.executeUpdate();
+		
+		}catch(Exception e) {
+			System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		return result;
+	}
 }
