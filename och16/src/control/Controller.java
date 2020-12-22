@@ -21,7 +21,7 @@ import service.CommandProcess;
 /**
  * Servlet implementation class Controller
  */
-@WebServlet("/Controller")
+//@WebServlet("/Controller")
 public class Controller extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     private Map<String, Object> commandMap = new HashMap<String, Object>();   
@@ -37,12 +37,15 @@ public class Controller extends HttpServlet {
 	public void init(ServletConfig config) throws ServletException {
 		//web.xml에서 propertyConfig에 해당하는 init-param의 값을 읽어옴
 		String props = config.getInitParameter("config");
+		System.out.println("Controller init props->"+props);
 		//명령어와 처리클래스의 매핑정도를 저장할 Properties객체 생성
 		Properties pr = new Properties();
 		FileInputStream f = null;
 		
 		try {
 			String configFilePath = config.getServletContext().getRealPath(props);
+			System.out.println("Controller init configFilePath->"+configFilePath);
+
 			f= new FileInputStream(configFilePath);
 			// command.properties 파일의 정보를 Properties객체에 저장
 			pr.load(f);
@@ -73,7 +76,7 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		requestPro(request, response);
 	}
 
 	/**
@@ -97,10 +100,10 @@ public class Controller extends HttpServlet {
 				command = command.substring(request.getContextPath().length());
 			// }
 			com = (CommandProcess)commandMap.get(command);
-			System.out.println("command=> "+ command);   //  /och16/com
-			System.out.println("com=> "+com); 			//  /och16/com
-			view = com.requestPro(request, response);
-			System.out.println("view=> " + view); 		//  /och16/com
+			System.out.println("requestPro command=> "+ command);   //  /och16/com
+			System.out.println("requestPro com=> "+com); 			//  /och16/com
+			view = com.requestPro(request, response);	//	updateForm.jsp
+			System.out.println("requestPro view=> " + view); 		//  /och16/com
 		}catch(Throwable e) {
 			throw new ServletException(e);
 		}
