@@ -134,4 +134,97 @@ public class BoardDao {
 		}
 		return list;
 	}
+	public void readCount(int num) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		String sql = "UPDATE board SET readcount=readcount+1 WHERE num = ?";
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, num);
+			pstmt.executeUpdate();
+		}catch(Exception e) {
+				System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+	}
+	public int update(Board board) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = "UPDATE board SET subject=?,writer=?,email=?,passwd=?,content=?,ip=? WHERE num = ?";
+		try {
+			conn = getConnection();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, board.getSubject());
+			pstmt.setString(2, board.getWriter());
+			pstmt.setString(3, board.getEmail());
+			pstmt.setString(4, board.getPasswd());
+			pstmt.setString(5, board.getContent());
+			pstmt.setString(6, board.getIp());
+			pstmt.setInt(7, board.getNum());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+				System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		
+		return result;
+	}
+	public int insert(Board board) throws SQLException {
+		int num = board.getNum();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		ResultSet rs = null;
+		String sql1 = "SELECT nvl(MAX(num),0) FROM board";
+		String sql = "INSERT INTO board VALUES (?,?,?,?,?,?,?,?,?,?,?,sysdate)";
+		String sql2= "UPDATE board set re_step = re_step+1 WHERE ref = ? and re_step > ?";
+		try {
+			conn = getConnection();
+			// 댓글일시 추가 작업
+			if(num != 0) {
+				pstmt = conn.prepareStatement(sql2);
+				pstmt.setInt(1, board.getRef());
+				pstmt.setInt(2, board.getRe_step());
+				pstmt.executeUpdate();
+				pstmt.close();
+				board.setRe_step(board.getRe_step()+1);
+				board.setRe_level(board.getRe_level()+1);
+			}
+			pstmt = conn.prepareStatement(sql1);
+			rs = pstmt.executeQuery();
+			rs.next();
+			// 일단 MAX사용
+			int number = rs.getInt(1)+1;
+			
+			rs.close();
+			if(pstmt!=null) pstmt.close();
+			if(num ==0) board.setRef(number);
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, number);
+			pstmt.setString(2, board.getWriter());
+			pstmt.setString(3, board.getSubject());
+			pstmt.setString(4, board.getContent());
+			pstmt.setString(5, board.getEmail());
+			pstmt.setInt(6, board.getReadcount());
+			pstmt.setString(7, board.getPasswd());
+			pstmt.setInt(8, board.getRef()); //getRef
+			pstmt.setInt(9, board.getRe_step());		//getRe_step
+			pstmt.setInt(10, board.getRe_level());	//getRe_level
+			pstmt.setString(11, board.getIp());
+			result = pstmt.executeUpdate();
+		}catch(Exception e) {
+				System.out.println(e.getMessage());
+		}finally {
+			if(pstmt!=null) pstmt.close();
+			if(conn!=null) conn.close();
+		}
+		
+		return result;
+	}
 }

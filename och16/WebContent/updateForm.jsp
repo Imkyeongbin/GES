@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-<form action="" method="post">
+<form action="updatePro.do" method="post">
 	<input type="hidden" name="num" value="${board.num}">
 	<input type="hidden" name="pageNum" value="${pageNum}">
 	<table border="1">

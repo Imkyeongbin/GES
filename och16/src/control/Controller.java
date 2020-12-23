@@ -84,7 +84,7 @@ public class Controller extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		requestPro(request, response);
 	}
 	//사용자의 요청을 분석해서 해당 작업을 처리
 	private void requestPro(HttpServletRequest request, HttpServletResponse response)

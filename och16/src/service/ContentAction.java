@@ -1,6 +1,7 @@
 package service;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -8,26 +9,30 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.Board;
 import dao.BoardDao;
+import dao.BoardDao;
 
-public class UpdateFormAction implements CommandProcess {
+public class ContentAction implements CommandProcess {
 
 	@Override
 	public String requestPro(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// 나중 수정
-//		System.out.println("UpdateFormAction->"+request.getParameter("num"));
 		int num = Integer.parseInt(request.getParameter("num"));
-//		System.out.println(num);
 		String pageNum = request.getParameter("pageNum");
+		
 		try {
 			BoardDao bd = BoardDao.getInstance();
+			bd.readCount(num);
 			Board board = bd.select(num);
+			
+			request.setAttribute("num", num);
 			request.setAttribute("pageNum", pageNum);
-			request.setAttribute("board",   board);
-		} catch (Exception e) {
-			System.out.println("UpdateFormAction requestPro ->"+e.getMessage());
+			request.setAttribute("board", board);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return "updateForm.jsp";
+		
+		return "content.jsp";
 	}
 
 }
